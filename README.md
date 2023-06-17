@@ -2,9 +2,9 @@
 
 This application was generated using https://start.ktor.io/
 
-| Branch |                                                                               Pipeline                                                                               |                                                                            Code coverage                                                                             |                                 Gradle test report                                  |                                 Jacoco test report                                  |
-|:------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|
-|  main  | [![pipeline status](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/badges/main/pipeline.svg)](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/-/commits/main) | [![coverage report](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/badges/main/coverage.svg)](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/-/commits/main) | [link](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/gradle-report/index.html) | [link](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/jacoco-report/index.html) |
+| Branch |                                                                               Pipeline                                                                               |                                                                            Code coverage                                                                             |                                 Gradle test report                                 |                                 Jacoco test report                                 |
+|:------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------:|
+|  main  | [![pipeline status](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/badges/main/pipeline.svg)](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/-/commits/main) | [![coverage report](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/badges/main/coverage.svg)](https://gitlab.com/ShowMeYourCodeYouTube/ktor-demo/-/commits/main) | [link](https://showmeyourcodeyoutube.gitlab.io/ktor-demo/gradle-report/index.html) | [link](https://showmeyourcodeyoutube.gitlab.io/ktor-demo/jacoco-report/index.html) |
 
 ---
 
@@ -12,7 +12,7 @@ The `KTOR demo` shows a simple project build with KTOR framework and related plu
 
 The service aims to provide tokens to registered users. As a user you can:
 - log in,
-  - {{baseUrl}}api/v1/users/login
+  - {{baseUrl}}/api/v1/users/login
 - register,
   - {{baseUrl}}/api/v1/users
 - request a new access token (using refresh token).

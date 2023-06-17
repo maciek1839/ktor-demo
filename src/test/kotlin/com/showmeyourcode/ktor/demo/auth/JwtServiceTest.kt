@@ -41,7 +41,7 @@ class JwtServiceTest {
     }
 
     @Test
-    fun `should not verify invalid token - TokenExpiredException2`() {
+    fun `should not verify invalid token - InvalidClaimException`() {
         val expiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJpc3MiOiJzaG93bWV5b3VyY29kZS1URVNUIiwibmlja25hbWUiOiJteS1uaWNrIiwiaWQiOjEsImV4cCI6MTY4NzA4NjE2OSwiaWF0IjoxNjg2OTk5NzY5fQ.KSscgjyLy7xfUW4XcTd_rDBWjfaN4vAtGS92EgYC9PtrYCwHlBDhBOAqCJvk4Im1kxeX0kaStRQjGr7sKPQq3A"
         val service = JwtService()
 

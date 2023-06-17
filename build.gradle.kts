@@ -16,6 +16,8 @@ plugins {
     id("org.sonarqube") version "4.2.1.3168"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
     id("org.jlleitschuh.gradle.ktlint") version "11.4.0"
+
+    jacoco
 }
 
 group = "com.showmeyourcode.ktor.demo"
@@ -37,6 +39,8 @@ sonarqube {
     properties {
         property("sonar.projectKey", "ShowMeYourCodeYouTube_ktor-demo")
         property("sonar.organization", "showmeyourcodeyoutube")
+        property("sonar.core.codeCoveragePlugin", "jacoco")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
@@ -82,5 +86,24 @@ tasks {
     }
     build {
         dependsOn(fatJar) // Trigger fat jar creation during build
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
     }
 }
