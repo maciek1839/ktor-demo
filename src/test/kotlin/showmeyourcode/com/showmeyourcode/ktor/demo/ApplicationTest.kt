@@ -1,5 +1,3 @@
 package showmeyourcode.com.showmeyourcode.ktor.demo
 
-
-class ApplicationTest {
-}
+class ApplicationTest
