@@ -8,6 +8,8 @@ default:
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  IMAGE_NAME: ktor-sample
+  REGISTRY_PATH: $CI_REGISTRY_IMAGE/$IMAGE_NAME
 
 cache:
   paths:
@@ -17,21 +19,12 @@ cache:
 stages:
   - test
   - build
-  - analysis
+  - deploy
 
 test:
   stage: test
   script:
     - ./gradlew check -i
-
-build:
-  stage: build
-  script:
-    - ./gradlew build -x test
-  artifacts:
-    paths:
-      - build/libs/*.jar
-    expire_in: 1 hour
 
 sonarcloud-check:
   cache:
@@ -42,4 +35,36 @@ sonarcloud-check:
   only:
     - merge_requests
     - main
-    - develop
+
+build:
+  stage: build
+  script:
+    - ./gradlew build -x test
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 hour
+
+docker:
+  image: docker:19.03.8
+  stage: build
+  services:
+    - docker:dind
+  when: manual
+  before_script:
+    - ': before_script'
+    - echo 'Printing all environment variable'
+    - export
+    - uname -a
+    - cat /etc/os-release
+    - docker images -a
+    - docker -v
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $REGISTRY_PATH:$CI_COMMIT_SHORT_SHA -f Dockerfile .
+    - echo "Pushing to '$REGISTRY_PATH'. Image tag - '$CI_COMMIT_SHORT_SHA'"
+    - docker images -a
+    - docker push $REGISTRY_PATH:$CI_COMMIT_SHORT_SHA
+    - echo 'Done - check your Gitlab Container Registry.'
+
+

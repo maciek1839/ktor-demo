@@ -1,0 +1,154 @@
+_type: export
+__export_format: 4
+__export_date: 2023-06-17T11:07:54.219Z
+__export_source: insomnia.desktop.app:v2023.2.2
+resources:
+  - _id: req_cf064ccf02e74be9bc0dda3ce7f9a284
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1686999661381
+    created: 1686980509822
+    url: "{{baseUrl}}/api/v1/users"
+    name: Register
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	  "email": "test@email.com",
+            "password": "strong-password",
+            "nick": "my-nick"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1686980509822
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: wrk_5affb8b803254ad3b6de8e8c744765c9
+    parentId: null
+    modified: 1686980855806
+    created: 1686980855806
+    name: ktor-demo
+    description: ""
+    scope: design
+    _type: workspace
+  - _id: req_7e70285e6f264d0a8f80ed4dd0523d23
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1687000046064
+    created: 1686980463982
+    url: "{{baseUrl}}/api/v1/users/login"
+    name: Log in
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "email":"test@email.com",
+            "password":"strong-password"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1686980463982
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_dc75d1214cb240ee909a21911f5e7438
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1686980440992
+    created: 1686980426966
+    url: "{{baseUrl}}/metrics"
+    name: Metrics Prometheus
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1686980426966
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_51c388061cb94ce8825d423256674dc8
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1686980411711
+    created: 1686980407550
+    url: "{{baseUrl}}/health"
+    name: Health
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1686980407550
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_8dcb3628200648158a81aacb31cb9b0d
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1686980377332
+    created: 1686980342199
+    name: Base Environment
+    data: {}
+    dataPropertyOrder: {}
+    color: null
+    isPrivate: false
+    metaSortKey: 1686980342199
+    _type: environment
+  - _id: jar_ae6f623e89db4cd0b9f1e914ac677c4f
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1686980342201
+    created: 1686980342201
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_b2e263a430be42deb758d5a7e9f1b0e5
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1686980855807
+    created: 1686980855807
+    fileName: ktor-demo
+    contents: ""
+    contentType: yaml
+    _type: api_spec
+  - _id: env_6c1041aa72594639bff79f782a04e69e
+    parentId: env_8dcb3628200648158a81aacb31cb9b0d
+    modified: 1686980390265
+    created: 1686980360486
+    name: local
+    data:
+      baseUrl: localhost:8080
+    dataPropertyOrder:
+      "&":
+        - baseUrl
+    color: null
+    isPrivate: false
+    metaSortKey: 1686980360486
+    _type: environment
