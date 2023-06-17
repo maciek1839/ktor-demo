@@ -5,11 +5,18 @@ default:
     - chmod +x gradlew
     - export GRADLE_USER_HOME=`pwd`/.gradle
 
+# Static Application Security Testing (SAST) is a frequently used Application Security (AppSec) tool,
+# which scans an application’s source, binary, or byte code.
+# https://www.microfocus.com/en-us/what-is/sast
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
   IMAGE_NAME: ktor-sample
   REGISTRY_PATH: $CI_REGISTRY_IMAGE/$IMAGE_NAME
+  SAST_JAVA_VERSION: "11" # Required by SAST scanning
 
 cache:
   paths:
