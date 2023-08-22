@@ -1,5 +1,5 @@
 default:
-  image: amazoncorretto:11.0.7
+  image: amazoncorretto:17.0.8@sha256:986a574adea0fb892e16dd5f3de99b8b15c1495770319153af051331bc6d49ab
   before_script:
     - ': before_script'
     - chmod +x gradlew
@@ -16,7 +16,7 @@ variables:
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
   IMAGE_NAME: ktor-sample
   REGISTRY_PATH: $CI_REGISTRY_IMAGE/$IMAGE_NAME
-  SAST_JAVA_VERSION: "11" # Required by SAST scanning
+  SAST_JAVA_VERSION: "17" # Required by SAST scanning
 
 cache:
   paths:
