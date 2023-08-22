@@ -4,10 +4,10 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 
+@Serializable
 data class User(
     val id: Int,
     val email: String,
-    val nick: String,
     val active: Boolean,
     val password: String,
     val createAt: String
@@ -16,25 +16,16 @@ data class User(
 @Serializable
 data class RegisterUser(
     val email: String?,
-    val password: String?,
-    val nick: String?
+    val password: String?
 )
-
-val mapper = DefaultJson
-
-fun RegisterUser.toJson(): String {
-    return mapper.encodeToString(this)
-}
 
 @Serializable
-data class LoginUser(
-    val email: String,
-    val password: String
+data class UserCount(
+    val count: Int
 )
 
-fun LoginUser.toJson(): String {
-    return mapper.encodeToString(this)
-}
+fun User.toJson(): String = DefaultJson.encodeToString(this)
+fun RegisterUser.toJson(): String = DefaultJson.encodeToString(this)
 
 fun isEmailValid(email: String): Boolean {
     return "^[A-Za-z](.*)([@])(.+)(\\.)(.+)".toRegex().matches(email)

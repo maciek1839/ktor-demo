@@ -8,10 +8,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class RoutingMetricsTest {
+class MetricsRoutingTest {
     @Test
     fun `should call metrics endpoint`() {
-        withTestApplication({ configureMonitoring() }) {
+        withTestApplication({ configureMetrics() }) {
             handleRequest(HttpMethod.Get, RoutingConstant.METRICS).apply {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertNotNull(response.content)
@@ -23,7 +23,7 @@ class RoutingMetricsTest {
     fun `should all health endpoint`() {
         withTestApplication({
             configureSerialization()
-            configureMonitoring()
+            configureMetrics()
         }) {
             handleRequest(HttpMethod.Get, RoutingConstant.HEALTH).apply {
                 assertEquals(HttpStatusCode.OK, response.status())

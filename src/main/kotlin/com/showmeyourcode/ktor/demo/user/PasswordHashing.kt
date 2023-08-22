@@ -1,4 +1,4 @@
-package com.showmeyourcode.ktor.demo.auth
+package com.showmeyourcode.ktor.demo.user
 
 import com.showmeyourcode.ktor.demo.configuration.appConfig
 import io.ktor.util.*

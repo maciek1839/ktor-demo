@@ -41,6 +41,7 @@ sonarqube {
         property("sonar.organization", "showmeyourcodeyoutube")
         property("sonar.core.codeCoveragePlugin", "jacoco")
         property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.coverage.exclusions", "**/demo/ApplicationKt.class")
     }
 }
 
@@ -57,7 +58,6 @@ dependencies {
     implementation("io.ktor:ktor-server-caching-headers-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-
     implementation("com.auth0:java-jwt:$auth0_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
@@ -106,4 +106,9 @@ tasks.jacocoTestReport {
         xml.required.set(true)
         csv.required.set(false)
     }
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude("**/demo/ApplicationKt.class")
+        }
+    )
 }

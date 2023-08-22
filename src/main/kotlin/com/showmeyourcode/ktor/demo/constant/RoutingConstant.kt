@@ -6,6 +6,10 @@ object RoutingConstant {
     const val METRICS = "/metrics"
     const val HEALTH = "/health"
     const val API_USERS = "$API_V1_PREFIX/users"
-    const val API_USERS_STATS = "$API_USERS/stats"
-    const val LOGIN = "$API_USERS/login"
+    const val COUNT = "$API_USERS/count"
+    private const val OAUTH_PREFIX = "$API_V1_PREFIX/oauth2"
+    const val OAUTH_AUTHORIZE = "$OAUTH_PREFIX/authorize"
+    const val OAUTH = "$OAUTH_PREFIX/token"
+    const val OAUTH_STATUS = "$OAUTH/status"
+    const val OAUTH_REVOKE = "$API_V1_PREFIX/oauth2/revoke"
 }

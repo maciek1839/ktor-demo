@@ -11,7 +11,7 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import org.slf4j.event.Level
 
-fun Application.configureMonitoring() {
+fun Application.configureMetrics() {
     log.info("Initializing logging and metrics...")
     install(CallLogging) {
         level = Level.INFO

@@ -1,6 +1,10 @@
 package com.showmeyourcode.ktor.demo.user
 
+import com.showmeyourcode.ktor.demo.common.DATE_FORMAT
+import com.showmeyourcode.ktor.demo.common.getLogger
 import com.showmeyourcode.ktor.demo.database.UserEntity
+import com.showmeyourcode.ktor.demo.database.UserId
+import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.*
@@ -16,53 +20,80 @@ suspend fun <T> dbQuery(block: () -> T): T =
         transaction { block() }
     }
 
+data class ValidationException(override val message: String, val status: HttpStatusCode) : Exception(message)
+
 class UserService {
+
+    companion object {
+        private val logger = getLogger()
+    }
 
     suspend fun deleteAll() = dbQuery {
         UserEntity.deleteAll()
     }
 
-    suspend fun getUserByEmail(email: String): User? = dbQuery {
+    suspend fun getAllCount(): UserCount = dbQuery {
+        UserCount(
+            UserEntity
+                .slice(UserEntity.id, UserEntity.id.countDistinct().alias("count"))
+                .selectAll().count()
+        )
+    }
+
+    suspend fun getById(id: UserId): User? = dbQuery {
+        UserEntity.select {
+            (UserEntity.id eq id)
+        }.mapNotNull { e -> e.toUser() }
+            .singleOrNull()
+    }
+
+    suspend fun createUser(signupObject: RegisterUser): User {
+        if (signupObject.email == null || signupObject.password == null) {
+            throw ValidationException("Bad request for registering a new user", HttpStatusCode.BadRequest)
+        }
+
+        if (!isEmailValid(signupObject.email)) {
+            throw ValidationException(
+                "Bad request for registering a new user with an invalid email address",
+                HttpStatusCode.BadRequest
+            )
+        }
+
+        if (getUserByEmail(signupObject.email) != null) {
+            throw ValidationException("A user already exists", HttpStatusCode.BadRequest)
+        }
+
+        return dbQuery {
+            return@dbQuery UserEntity.insert {
+                it[email] = signupObject.email
+                it[password] = hashFunction(signupObject.password)
+                it[active] = true
+            }.toUser()
+        }
+    }
+
+    private suspend fun getUserByEmail(email: String): User? = dbQuery {
         UserEntity.select {
             (UserEntity.email eq email)
-        }.mapNotNull { toUser(it) }
+        }.mapNotNull { e -> e.toUser() }
             .singleOrNull()
     }
-
-    suspend fun getUserByNick(nick: String): User? = dbQuery {
-        UserEntity.select {
-            (UserEntity.nick eq nick)
-        }.mapNotNull { toUser(it) }
-            .singleOrNull()
-    }
-
-    suspend fun createUser(newUser: RegisterUser, hash: String): User = dbQuery {
-        val insert = UserEntity.insert {
-            it[email] = newUser.email!!
-            it[password] = hash
-            it[nick] = newUser.nick!!
-            it[active] = true
-        }
-        toUser(insert)
-    }
-
-    private fun toUser(row: ResultRow): User =
-        User(
-            id = row[UserEntity.id],
-            email = row[UserEntity.email],
-            active = row[UserEntity.active],
-            password = row[UserEntity.password],
-            nick = row[UserEntity.nick],
-            createAt = row[UserEntity.createdAt].toString("yyyy-MM-dd'T'HH:mm:ss.SSZZ")
-        )
-
-    private fun toUser(row: InsertStatement<Number>): User =
-        User(
-            id = row[UserEntity.id],
-            email = row[UserEntity.email],
-            active = row[UserEntity.active],
-            password = row[UserEntity.password],
-            nick = row[UserEntity.nick],
-            createAt = row[UserEntity.createdAt].toString("yyyy-MM-dd'T'HH:mm:ss.SSZZ")
-        )
 }
+
+fun InsertStatement<Number>.toUser(): User =
+    User(
+        id = this[UserEntity.id],
+        email = this[UserEntity.email],
+        active = this[UserEntity.active],
+        password = this[UserEntity.password],
+        createAt = this[UserEntity.createdAt].toString(DATE_FORMAT)
+    )
+
+fun ResultRow.toUser(): User =
+    User(
+        id = this[UserEntity.id],
+        email = this[UserEntity.email],
+        active = this[UserEntity.active],
+        password = this[UserEntity.password],
+        createAt = this[UserEntity.createdAt].toString(DATE_FORMAT)
+    )
