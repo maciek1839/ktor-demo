@@ -12,24 +12,22 @@ The `KTOR demo` shows a simple project build with KTOR framework and related plu
 
 Apart from showing KTOR, it also discussed a few other topics:
 - storing users in a database,
-- issuing and validating JWT tokens.
+- issuing and validating JWT tokens ([OAuth2](OAUTH.md)).
 
-OAuth concept is not discussed in this project.
+| Endpoint                    | HTTP method | Description                  | Authentication |
+|-----------------------------|-------------|------------------------------|----------------|
+| /api/v1/users               | POST        | Create                       |                |
+| /api/v1/users/{userId}      | GET         | Get by ID                    | Basic Auth     |
+| /api/v1/users/count         | GET         | Count registered users       | Basic Auth     |
+| /api/v1/oauth2/authorize    | GET         | Obtain an authorization code |                |
+| /api/v1/oauth2/token        | POST        | Obtain a token               |                |
+| /api/v1/oauth2/token/status | POST        | Obtain token details         | JWT Auth       |
+| /api/v1/oauth2/revoke       | POST        | Revokes an access            |                |
 
-| Endpoint                    | HTTP method | Description            | Authentication |
-|-----------------------------|-------------|------------------------|----------------|
-| /api/v1/users               | POST        | Create                 |                |
-| /api/v1/users/{userId}      | GET         | Get by ID              | Basic Auth     |
-| /api/v1/users/count         | GET         | Count registered users | Basic Auth     |
-| /api/v1/oauth2/authorize    | POST        | Obtain a token         | JWT Auth       |
-| /api/v1/oauth2/token        | POST        | Obtain a token         | JWT Auth       |
-| /api/v1/oauth2/token/status | GET         | Get token details      | JWT Auth       |
-| /api/v1/oauth2/revoke       | POST        | Revokes an access      | JWT Auth       |
-
-*API designed was inspired by:*
-- [OAuth API](https://developer.squareup.com/reference/square/o-auth-api/authorize),
+*API design was inspired by:*
+- [Square Developer](https://developer.squareup.com/reference/square/o-auth-api/authorize) - reference implementation,
 - [Okta Developer](https://developer.okta.com/docs/guides/refresh-tokens/main/#example-request),
-- [CURITY OAuth Refresh](https://curity.io/resources/learn/oauth-refresh/).
+- [OAuth 2 Simplified](https://aaronparecki.com/oauth-2-simplified/).
 
 All above requests are defined in the project's [Insomnia file](insomnia_ktor-demo.yaml).
 
@@ -40,7 +38,6 @@ The service doesn't use any external providers e.g. Auth0.
 - Kotlin
 - KTOR
 - Gradle
-- JDK 11
 - Netty
 - Flyway
 - PostgreSQL / H2

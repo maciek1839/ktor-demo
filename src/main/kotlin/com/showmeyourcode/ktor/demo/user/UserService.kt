@@ -1,7 +1,6 @@
 package com.showmeyourcode.ktor.demo.user
 
 import com.showmeyourcode.ktor.demo.common.DATE_FORMAT
-import com.showmeyourcode.ktor.demo.common.getLogger
 import com.showmeyourcode.ktor.demo.database.UserEntity
 import com.showmeyourcode.ktor.demo.database.UserId
 import io.ktor.http.HttpStatusCode
@@ -23,10 +22,6 @@ suspend fun <T> dbQuery(block: () -> T): T =
 data class ValidationException(override val message: String, val status: HttpStatusCode) : Exception(message)
 
 class UserService {
-
-    companion object {
-        private val logger = getLogger()
-    }
 
     suspend fun deleteAll() = dbQuery {
         UserEntity.deleteAll()

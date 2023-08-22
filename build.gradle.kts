@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -23,6 +25,11 @@ plugins {
 group = "com.showmeyourcode.ktor.demo"
 version = "1.0.0"
 
+repositories {
+    mavenCentral()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
+}
+
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
 
@@ -30,9 +37,11 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
-repositories {
-    mavenCentral()
-    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs += "-Xjsr305=strict"
+        jvmTarget = "17"
+    }
 }
 
 sonarqube {
@@ -41,7 +50,7 @@ sonarqube {
         property("sonar.organization", "showmeyourcodeyoutube")
         property("sonar.core.codeCoveragePlugin", "jacoco")
         property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.coverage.exclusions", "**/demo/ApplicationKt.class")
+        property("sonar.coverage.exclusions", "**/demo/Application*")
     }
 }
 

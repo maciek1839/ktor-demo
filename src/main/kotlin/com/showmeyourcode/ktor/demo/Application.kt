@@ -1,12 +1,12 @@
 package com.showmeyourcode.ktor.demo
 
-import com.showmeyourcode.ktor.demo.auth.JwtService
+import com.showmeyourcode.ktor.demo.oauth.OAuthService
 import com.showmeyourcode.ktor.demo.plugins.*
 import com.showmeyourcode.ktor.demo.routes.*
 import com.showmeyourcode.ktor.demo.user.UserService
 import io.ktor.server.application.*
 
-val jwtService = JwtService()
+val oauthService = OAuthService()
 val userService = UserService()
 
 fun main(args: Array<String>): Unit =
@@ -21,5 +21,5 @@ fun Application.module() {
     configureHttp()
     configureMetrics()
     configureUsersRouting(userService)
-    configureOAuthRouting()
+    configureOAuthRouting(oauthService)
 }

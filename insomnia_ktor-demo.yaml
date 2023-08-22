@@ -1,30 +1,21 @@
 _type: export
 __export_format: 4
-__export_date: 2023-06-17T11:07:54.219Z
-__export_source: insomnia.desktop.app:v2023.2.2
+__export_date: 2023-08-22T15:16:00.602Z
+__export_source: insomnia.desktop.app:v2023.5.5
 resources:
-  - _id: req_cf064ccf02e74be9bc0dda3ce7f9a284
+  - _id: req_51c388061cb94ce8825d423256674dc8
     parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
-    modified: 1686999661381
-    created: 1686980509822
-    url: "{{baseUrl}}/api/v1/users"
-    name: Register
+    modified: 1692700115185
+    created: 1686980407550
+    url: "{{baseUrl}}/health"
+    name: HEALTH
     description: ""
-    method: POST
-    body:
-      mimeType: application/json
-      text: |-
-        {
-        	  "email": "test@email.com",
-            "password": "strong-password",
-            "nick": "my-nick"
-        }
+    method: GET
+    body: {}
     parameters: []
-    headers:
-      - name: Content-Type
-        value: application/json
+    headers: []
     authentication: {}
-    metaSortKey: -1686980509822
+    metaSortKey: -1686980407550
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -41,41 +32,12 @@ resources:
     description: ""
     scope: design
     _type: workspace
-  - _id: req_7e70285e6f264d0a8f80ed4dd0523d23
-    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
-    modified: 1687000046064
-    created: 1686980463982
-    url: "{{baseUrl}}/api/v1/users/login"
-    name: Log in
-    description: ""
-    method: POST
-    body:
-      mimeType: application/json
-      text: |-
-        {
-            "email":"test@email.com",
-            "password":"strong-password"
-        }
-    parameters: []
-    headers:
-      - name: Content-Type
-        value: application/json
-    authentication: {}
-    metaSortKey: -1686980463982
-    isPrivate: false
-    settingStoreCookies: true
-    settingSendCookies: true
-    settingDisableRenderRequestBody: false
-    settingEncodeUrl: true
-    settingRebuildPath: true
-    settingFollowRedirects: global
-    _type: request
   - _id: req_dc75d1214cb240ee909a21911f5e7438
     parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
-    modified: 1686980440992
+    modified: 1692700119011
     created: 1686980426966
     url: "{{baseUrl}}/metrics"
-    name: Metrics Prometheus
+    name: PROMETHEUS METRICS
     description: ""
     method: GET
     body: {}
@@ -91,19 +53,198 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_51c388061cb94ce8825d423256674dc8
+  - _id: req_cf064ccf02e74be9bc0dda3ce7f9a284
     parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
-    modified: 1686980411711
-    created: 1686980407550
-    url: "{{baseUrl}}/health"
-    name: Health
+    modified: 1692699478914
+    created: 1686980509822
+    url: "{{baseUrl}}/api/v1/users"
+    name: CREATE USER
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	  "email": "test@email.com",
+            "password": "strong-password"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1686980509822
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1c9f2f16996845d988343d0c82874069
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1692699467415
+    created: 1692612744805
+    url: "{{baseUrl}}/api/v1/users/count"
+    name: USERS COUNT
     description: ""
     method: GET
     body: {}
     parameters: []
     headers: []
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: admin
+      password: admin
+    metaSortKey: -1692612744805
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_576d262502b545c5874459e87bfb8d2b
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1692700079390
+    created: 1692612763044
+    url: "{{baseUrl}}/api/v1/users/count/123"
+    name: USER BY ID
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: admin
+      password: admin
+    metaSortKey: -1692612763044
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_4302f612d8ac43499ea8a8ae809f6af5
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1692710940348
+    created: 1692708473110
+    url: "{{baseUrl}}/api/v1/oauth2/authorize?state=123xyz&scope=profile+email&redi\
+      rect_uri=https://your-app.localhost/callback&client_id=YOUR_APP_ID"
+    name: OAUTH AUTHORIZE
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: Insomnia/2023.5.5
     authentication: {}
-    metaSortKey: -1686980407550
+    metaSortKey: -1692708473110
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_a7b53ba72e954b1abfe7896fe40e6c99
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1692712461381
+    created: 1692712397146
+    url: "{{baseUrl}}/api/v1/oauth2/token"
+    name: OAUTH TOKEN
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"client_id": "YOUR_APP_ID",
+        	"client_secret": "APPLICATION_SECRET",
+        	"code": "CODE_FROM_AUTHORIZE",
+        	"grant_type": "authorization_code"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: Insomnia/2023.5.5
+    authentication: {}
+    metaSortKey: -1692660618077
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_9d9e1bc19c274d608a011180e49ff48b
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1692717325123
+    created: 1692714140679
+    url: "{{baseUrl}}/api/v1/oauth2/token/status"
+    name: OAUTH STATUS
+    description: ""
+    method: POST
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: Insomnia/2023.5.5
+    authentication:
+      type: bearer
+      token: ACCESS_TOKEN
+    metaSortKey: -1692636690560.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_a14d1679311e4496a44d154d0a610c96
+    parentId: wrk_5affb8b803254ad3b6de8e8c744765c9
+    modified: 1692717288600
+    created: 1692716961528
+    url: "{{baseUrl}}/api/v1/oauth2/revoke"
+    name: OAUTH REVOKE
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"access_token": "ACCESS_TOKEN",
+        	"client_id": "CLIENT_ID"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_e903e8657159436bb43adb6e19d5da4a
+      - name: User-Agent
+        value: Insomnia/2023.5.5
+        id: pair_294fe464b9fe468b8b672d79c5da261d
+      - id: pair_3d444b617cfe49218aa47c75a042ab46
+        name: Authorization
+        value: Client APPLICATION_SECRET
+        description: ""
+    authentication: {}
+    metaSortKey: -1692624726802.25
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
