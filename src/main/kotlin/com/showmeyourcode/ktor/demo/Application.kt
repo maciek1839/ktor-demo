@@ -12,9 +12,11 @@ val userService = UserService()
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
 
-// application.conf references the main function. This annotation prevents the IDE from marking it as unused.
+// application.conf references the main function.
+// This annotation prevents the IDE from marking it as unused.
 @Suppress("unused")
 fun Application.module() {
+    configureLogging()
     configureSerialization()
     configureFlyway()
     configureSecurity()

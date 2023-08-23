@@ -3,15 +3,23 @@ package com.showmeyourcode.ktor.demo.routes
 import com.showmeyourcode.ktor.demo.*
 import com.showmeyourcode.ktor.demo.constant.RoutingConstant
 import com.showmeyourcode.ktor.demo.plugins.*
+import com.showmeyourcode.ktor.demo.response.ErrorMessage
+import com.showmeyourcode.ktor.demo.response.ServerResponse
 import com.showmeyourcode.ktor.demo.user.RegisterUser
-import com.showmeyourcode.ktor.demo.user.UserService
 import com.showmeyourcode.ktor.demo.user.toJson
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import kotlin.test.*
-
-val userService = UserService()
 
 class UsersRoutingTest {
 
@@ -24,19 +32,20 @@ class UsersRoutingTest {
 
     @Test
     fun `should create a new user WHEN data are valid`() {
-        withTestApplication({
-            configureSerialization()
-            configureHttp()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Post, RoutingConstant.API_USERS) {
-                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
+            client.post(RoutingConstant.API_USERS) {
+                header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 setBody(validNewUser.toJson())
             }.apply {
-                assertEquals(HttpStatusCode.Created, response.status())
-                assertNull(response.content)
+                val response = call.response
+                assertEquals(HttpStatusCode.Created, response.status)
+                assertTrue(response.bodyAsText().isEmpty())
                 assertEquals(SERVICE_NAME_VALUE, response.headers[SERVICE_NAME_HEADER])
                 assertNotNull(response.headers[HttpHeaders.Location])
             }
@@ -45,21 +54,23 @@ class UsersRoutingTest {
 
     @Test
     fun `should not create a user WHEN another user with the same email already exists`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
             runBlocking {
                 userService.createUser(validNewUser)
             }.apply {
-                handleRequest(HttpMethod.Post, RoutingConstant.API_USERS) {
-                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                client.post(RoutingConstant.API_USERS) {
+                    header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(validNewUser.toJson())
                 }.apply {
-                    assertEquals(HttpStatusCode.BadRequest, response.status())
-                    assertNotNull(response.content)
+                    val response = call.response
+                    assertEquals(HttpStatusCode.BadRequest, response.status)
+                    assertFalse(response.bodyAsText().isEmpty())
                 }
             }
         }
@@ -67,170 +78,190 @@ class UsersRoutingTest {
 
     @Test
     fun `should not create a user WHEN email or password are empty`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Post, RoutingConstant.API_USERS) {
-                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                setBody(RegisterUser(null, "pswd").toJson())
-            }.apply {
-                assertEquals(HttpStatusCode.BadRequest, response.status())
-                assertNotNull(response.content)
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
             }
 
-            handleRequest(HttpMethod.Post, RoutingConstant.API_USERS) {
-                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            client.post(RoutingConstant.API_USERS) {
+                header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                setBody(RegisterUser(null, "pswd").toJson())
+            }.apply {
+                val response = call.response
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+                assertTrue(response.bodyAsText().isNotBlank())
+            }
+
+            client.post(RoutingConstant.API_USERS) {
+                header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 setBody(RegisterUser("example@gmail.com", null).toJson())
             }.apply {
-                assertEquals(HttpStatusCode.BadRequest, response.status())
-                assertNotNull(response.content)
+                val response = call.response
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+                assertTrue(response.bodyAsText().isNotBlank())
             }
         }
     }
 
     @Test
     fun `should not create a user WHEN an email is invalid`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Post, RoutingConstant.API_USERS) {
-                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
+            client.post(RoutingConstant.API_USERS) {
+                header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 setBody(RegisterUser("example.invalid-address", "pswd").toJson())
             }.apply {
-                assertEquals(HttpStatusCode.BadRequest, response.status())
-                assertNotNull(response.content)
+                val response = call.response
+                assertEquals(HttpStatusCode.BadRequest, response.status)
+                assertTrue(response.bodyAsText().isNotBlank())
             }
         }
     }
 
     @Test
     fun `should not allow access to users count endpoint WHEN credentials are missing`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Get, RoutingConstant.COUNT) {
-            }.apply {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
             }
 
-            handleRequest(HttpMethod.Get, RoutingConstant.COUNT).apply {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+            client.get(RoutingConstant.COUNT).apply {
+                val response = call.response
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
             }
         }
     }
 
     @Test
     fun `should not allow to access to users count endpoint WHEN credentials are bad`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Get, RoutingConstant.COUNT) {
-            }.apply {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
             }
 
-            handleRequest(HttpMethod.Get, RoutingConstant.COUNT) {
-                addHeader(HttpHeaders.Authorization, getInvalidBasicAuthHeader())
+            client.get(RoutingConstant.COUNT) {
+                header(HttpHeaders.Authorization, getInvalidBasicAuthHeader())
             }.apply {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                val response = call.response
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
             }
         }
     }
 
     @Test
     fun `should allow access to users count endpoint WHEN credentials are valid`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Get, RoutingConstant.COUNT) {
-                addHeader(HttpHeaders.Authorization, getValidBasicAuthHeader())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
+            client.get(RoutingConstant.COUNT) {
+                header(HttpHeaders.Authorization, getValidBasicAuthHeader())
             }.apply {
-                assertEquals(HttpStatusCode.OK, response.status())
+                val response = call.response
+                assertEquals(HttpStatusCode.OK, response.status)
                 assertEquals("application/json; charset=UTF-8", response.headers[HttpHeaders.ContentType])
-                assertNotNull(response.content)
+                assertTrue(response.bodyAsText().isNotBlank())
+
+                val responseDeserialized = Json.decodeFromString<ServerResponse>(response.bodyAsText())
+                assertEquals(validUserName, responseDeserialized.requestedBy)
+                assertTrue(responseDeserialized.timestamp.isNotBlank())
+                assertEquals(0, responseDeserialized.data.count)
             }
         }
     }
 
     @Test
     fun `should not allow access to users by ID endpoint WHEN credentials are missing`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Get, "${RoutingConstant.API_USERS}/123").apply {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
+            client.get("${RoutingConstant.API_USERS}/123").apply {
+                val response = call.response
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
             }
         }
     }
 
     @Test
     fun `should not allow to access to users by ID endpoint WHEN credentials are bad`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Get, "${RoutingConstant.API_USERS}/123") {
-                addHeader(HttpHeaders.Authorization, getInvalidBasicAuthHeader())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
+            client.get("${RoutingConstant.API_USERS}/123") {
+                header(HttpHeaders.Authorization, getInvalidBasicAuthHeader())
             }.apply {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                val response = call.response
+                assertEquals(HttpStatusCode.Unauthorized, response.status)
             }
         }
     }
 
     @Test
     fun `should allow access to users by ID endpoint and return 404 WHEN credentials are valid and a user does not exist`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
-            handleRequest(HttpMethod.Get, "${RoutingConstant.API_USERS}/123") {
-                addHeader(HttpHeaders.Authorization, getValidBasicAuthHeader())
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
+            client.get("${RoutingConstant.API_USERS}/123") {
+                header(HttpHeaders.Authorization, getValidBasicAuthHeader())
             }.apply {
-                assertEquals(HttpStatusCode.NotFound, response.status())
-                assertNotNull(response.content)
+                val response = call.response
+                assertEquals(HttpStatusCode.NotFound, response.status)
+                assertTrue(response.bodyAsText().isNotBlank())
+
+                val responseDeserialized = Json.decodeFromString<ErrorMessage>(response.bodyAsText())
+                assertEquals(HttpStatusCode.NotFound.value, responseDeserialized.status)
+                assertTrue(responseDeserialized.timestamp.isNotBlank())
+                assertTrue(responseDeserialized.message.isNotBlank())
             }
         }
     }
 
     @Test
     fun `should allow access to users by ID endpoint WHEN credentials are valid and a user exists`() {
-        withTestApplication({
-            configureSerialization()
-            configureFlyway()
-            configureSecurity()
-            configureUsersRouting(userService)
-        }) {
+        testApplication {
+            val client = createClient {
+                install(ContentNegotiation) {
+                    json()
+                }
+            }
+
             val id = runBlocking {
                 userService.createUser(validNewUser).id
             }
-            handleRequest(HttpMethod.Get, "${RoutingConstant.API_USERS}/$id") {
-                addHeader(HttpHeaders.Authorization, getValidBasicAuthHeader())
+
+            client.get("${RoutingConstant.API_USERS}/$id") {
+                header(HttpHeaders.Authorization, getValidBasicAuthHeader())
             }.apply {
-                assertEquals(HttpStatusCode.OK, response.status())
+                val response = call.response
+                assertEquals(HttpStatusCode.OK, response.status)
                 assertEquals("application/json; charset=UTF-8", response.headers[HttpHeaders.ContentType])
-                assertNotNull(response.content)
+                assertTrue(response.bodyAsText().isNotBlank())
             }
         }
     }

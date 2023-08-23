@@ -109,7 +109,7 @@ class OAuthService {
 
     fun getTokenStatus(accessTokenHeader: String): OAuthTokenStatus {
         val accessToken = accessTokenHeader.substring(7)
-        return verifyToken(accessToken).toTokenStatus()
+        return decodeToken(accessToken).toTokenStatus()
     }
 
     fun revokeToken(accessClientHeader: String, accessToken: String, clientId: String) {
@@ -117,7 +117,8 @@ class OAuthService {
         logger.info("Processing 'revoke' request: accessClientHeader - $accessClientHeader, accessToken - $accessToken, clientId - $clientId")
     }
 
-    private fun verifyToken(token: String): DecodedJWT = verifier.verify(token)
+    // The method throws an exception if it cannot decode the token.
+    fun decodeToken(token: String): DecodedJWT = verifier.verify(token)
 
     private fun expiresAt() = Date(System.currentTimeMillis() + 3_600_000)
 }

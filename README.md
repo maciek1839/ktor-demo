@@ -14,15 +14,15 @@ Apart from showing KTOR, it also discussed a few other topics:
 - storing users in a database,
 - issuing and validating JWT tokens ([OAuth2](OAUTH.md)).
 
-| Endpoint                    | HTTP method | Description                  | Authentication |
-|-----------------------------|-------------|------------------------------|----------------|
-| /api/v1/users               | POST        | Create                       |                |
-| /api/v1/users/{userId}      | GET         | Get by ID                    | Basic Auth     |
-| /api/v1/users/count         | GET         | Count registered users       | Basic Auth     |
-| /api/v1/oauth2/authorize    | GET         | Obtain an authorization code |                |
-| /api/v1/oauth2/token        | POST        | Obtain a token               |                |
-| /api/v1/oauth2/token/status | POST        | Obtain token details         | JWT Auth       |
-| /api/v1/oauth2/revoke       | POST        | Revokes an access            |                |
+| Endpoint                    | HTTP method | Description                  | Authentication      |
+|-----------------------------|-------------|------------------------------|---------------------|
+| /api/v1/users               | POST        | Create                       |                     |
+| /api/v1/users/{userId}      | GET         | Get by ID                    | Basic Auth          |
+| /api/v1/users/count         | GET         | Count registered users       | Basic Auth          |
+| /api/v1/oauth2/authorize    | GET         | Obtain an authorization code |                     |
+| /api/v1/oauth2/token        | POST        | Obtain a token               |                     |
+| /api/v1/oauth2/token/status | POST        | Obtain token details         | JWT Auth            |
+| /api/v1/oauth2/revoke       | POST        | Revokes an access token      | Client Secret Auth  |
 
 *API design was inspired by:*
 - [Square Developer](https://developer.squareup.com/reference/square/o-auth-api/authorize) - reference implementation,
