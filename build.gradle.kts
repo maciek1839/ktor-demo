@@ -12,12 +12,12 @@ val h2_version: String by project
 val auth0_version: String by project
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    id("io.ktor.plugin") version "2.2.3"
+    kotlin("jvm") version "1.9.10"
+    id("io.ktor.plugin") version "2.3.3"
 
-    id("org.sonarqube") version "4.2.1.3168"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
-    id("org.jlleitschuh.gradle.ktlint") version "11.4.0"
+    id("org.sonarqube") version "4.3.0.3225"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
 
     jacoco
 }
@@ -100,7 +100,7 @@ tasks {
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.10"
 }
 
 tasks.test {
