@@ -1,4 +1,4 @@
-FROM amazoncorretto:11.0.7
+FROM amazoncorretto:17.0.8@sha256:986a574adea0fb892e16dd5f3de99b8b15c1495770319153af051331bc6d49ab
 
 # Remember to pass environment variables to set a proper profile!
 #

@@ -14,7 +14,7 @@ include:
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-  IMAGE_NAME: ktor-sample
+  IMAGE_NAME: ktor-demo
   REGISTRY_PATH: $CI_REGISTRY_IMAGE/$IMAGE_NAME
   SAST_JAVA_VERSION: "17" # Required by SAST scanning
 
