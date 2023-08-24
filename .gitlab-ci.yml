@@ -65,12 +65,12 @@ build:
     expire_in: 1 hour
 
 docker:
-  image: docker:19.03.8
+  image: docker:19.03.8@sha256:8c119115801ae96e1f55b2ccb69cc84537c79eea057a00f363df0196f3d09fd4
   stage: build
   needs:
     - job: build
   services:
-    - docker:dind
+    - docker:dind@sha256:020562d22f11c27997e00da910ed6b580d93094bc25841cb87aacab4ced4a882
   when: manual
   before_script:
     - ': before_script'
