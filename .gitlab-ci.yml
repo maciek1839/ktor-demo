@@ -65,7 +65,7 @@ build:
     expire_in: 1 hour
 
 docker:
-  image: docker:19.03.15@sha256:ea1f0761c92b600417ad14bc9b2b3a30abf8e96e94895fee6cbb5353316f30b0
+  image: docker:24.0.5@sha256:020562d22f11c27997e00da910ed6b580d93094bc25841cb87aacab4ced4a882
   stage: build
   needs:
     - job: build

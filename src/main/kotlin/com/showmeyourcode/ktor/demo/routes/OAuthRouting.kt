@@ -72,6 +72,7 @@ fun Application.configureOAuthRouting(oauthService: OAuthService) {
                 val status = oauthService.getTokenStatus(accessTokenHeader)
                 call.respondText(status.toJson(), ContentType.Application.Json)
             } catch (e: Exception) {
+                // For test purposes the token is logged.
                 this@configureOAuthRouting.log.error("Cannot process the token '$accessTokenHeader'", e)
                 returnUnauthorized(call)
                 return@post
