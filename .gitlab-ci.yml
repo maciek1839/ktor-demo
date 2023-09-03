@@ -74,8 +74,6 @@ docker:
   when: manual
   before_script:
     - ': before_script'
-    - echo 'Printing all environment variable'
-    - export
     - uname -a
     - cat /etc/os-release
     - docker images -a

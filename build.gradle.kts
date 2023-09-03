@@ -13,9 +13,9 @@ val auth0_version: String by project
 
 plugins {
     kotlin("jvm") version "1.9.10"
-    id("io.ktor.plugin") version "2.3.3"
+    id("io.ktor.plugin") version "2.3.4"
 
-    id("org.sonarqube") version "4.3.0.3225"
+    id("org.sonarqube") version "4.3.1.3277"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
 

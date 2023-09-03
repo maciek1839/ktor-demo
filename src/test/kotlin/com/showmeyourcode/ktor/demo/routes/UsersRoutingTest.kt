@@ -173,7 +173,7 @@ class UsersRoutingTest {
             }.apply {
                 val response = call.response
                 assertEquals(HttpStatusCode.OK, response.status)
-                assertEquals("application/json; charset=UTF-8", response.headers[HttpHeaders.ContentType])
+                assertEquals("application/json", response.headers[HttpHeaders.ContentType])
                 assertTrue(response.bodyAsText().isNotBlank())
 
                 val responseDeserialized = Json.decodeFromString<ServerResponse>(response.bodyAsText())
@@ -260,7 +260,7 @@ class UsersRoutingTest {
             }.apply {
                 val response = call.response
                 assertEquals(HttpStatusCode.OK, response.status)
-                assertEquals("application/json; charset=UTF-8", response.headers[HttpHeaders.ContentType])
+                assertEquals("application/json", response.headers[HttpHeaders.ContentType])
                 assertTrue(response.bodyAsText().isNotBlank())
             }
         }
