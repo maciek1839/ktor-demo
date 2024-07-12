@@ -71,6 +71,8 @@ docker:
     - job: build
   services:
     - docker:dind@sha256:020562d22f11c27997e00da910ed6b580d93094bc25841cb87aacab4ced4a882
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   when: manual
   before_script:
     - ': before_script'
@@ -80,10 +82,9 @@ docker:
     - docker -v
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $REGISTRY_PATH:$CI_COMMIT_SHORT_SHA -f Dockerfile .
-    - echo "Pushing to '$REGISTRY_PATH'. Image tag - '$CI_COMMIT_SHORT_SHA'"
+    - docker build -t $IMAGE_TAG -f Dockerfile .
     - docker images -a
-    - docker push $REGISTRY_PATH:$CI_COMMIT_SHORT_SHA
+    - docker push $IMAGE_TAG
     - echo 'Done - check your Gitlab Container Registry.'
 
 pages:
